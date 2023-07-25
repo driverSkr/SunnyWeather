@@ -1,5 +1,6 @@
 package com.example.SunnyWeather.ui.place;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.SunnyWeather.R;
+import com.example.SunnyWeather.WeatherActivity;
 import com.example.SunnyWeather.logic.model.Place;
 
 import java.util.List;
@@ -27,7 +29,7 @@ import kotlin.Result;
 
 public class PlaceFragment extends Fragment {
 
-    private PlaceViewModel viewModel;
+    public PlaceViewModel viewModel;
     private PlaceAdapter adapter;
     private RecyclerView recyclerView;
 
@@ -41,6 +43,22 @@ public class PlaceFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(PlaceViewModel.class);
+
+        //如果当前已有存储的城市数据，那么就获取已存储的数据并解析成Place对象
+        if (viewModel.isPlaceSaved()){
+            Place place = viewModel.getSavedPlace();
+            Intent intent = new Intent(getContext(), WeatherActivity.class);
+            //使用它的经纬度坐标和城市名直接跳转并传递给WeatherActivity,这样用户就不需要每次都重新搜索并选择城市了
+            intent.putExtra("location_lng", place.getLocation().getLng());
+            intent.putExtra("location_lat", place.getLocation().getLat());
+            intent.putExtra("place_name", place.getName());
+
+            startActivity(intent);
+            if (getActivity() != null){
+                getActivity().finish();
+            }
+        }
+
         recyclerView = requireView().findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
