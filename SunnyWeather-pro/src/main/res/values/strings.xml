@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">阳光天气Pro</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="EditMessage">请输入地址</string>
+    <string name="query">查询</string>
+
+    <!--空气质量模块-->
+    <string name="air_quality">空气质量</string>
+    <string name="pm10">PM10</string>
+    <string name="_84">84</string>
+    <string name="pm2_5">PM2.5</string>
+    <string name="_2">2</string>
+    <string name="no">NO₂</string>
+    <string name="_56">56</string>
+    <string name="so">SO₂</string>
+    <string name="_3">3</string>
+    <string name="o">O₃</string>
+    <string name="_11">11</string>
+    <string name="co">CO</string>
+    <string name="_0_6">0.6</string>
+    <string name="air_level">优</string>
+    <string name="aqi_max">/500</string>
+</resources>

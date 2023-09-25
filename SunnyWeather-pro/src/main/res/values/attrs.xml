@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--注意这里的name要和自定义View的名称一致，不然在布局文件中无法引用-->
+    <declare-styleable name="CircleBarView">
+        <!--进度条圆弧颜色-->
+        <attr name="progress_color" format="color"/>
+        <!--背景圆弧颜色-->
+        <attr name="bg_color" format="color"/>
+        <!--进度条宽度-->
+        <attr name="bar_width" format="dimension"/>
+        <!--起始角度-->
+        <attr name="start_angle" format="float"/>
+        <!--扫过的角度-->
+        <attr name="sweep_angle" format="float"/>
+    </declare-styleable>
+</resources>
