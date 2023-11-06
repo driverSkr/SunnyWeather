@@ -3,8 +3,11 @@ package com.example.SunnyWeather.logic.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Place {
+    //城市名
     private String name;
+    //定位（经纬度）
     private Location location;
+    //详细地址
     @SerializedName("formatted_address")//让JSON字段和Kotlin 字段之间建立映射关系
     private String address;
 

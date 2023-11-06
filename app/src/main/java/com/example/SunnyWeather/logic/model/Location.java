@@ -1,7 +1,9 @@
 package com.example.SunnyWeather.logic.model;
 
 public class Location {
+    //经度 longitude
     private String lng;
+    //纬度  Latitude
     private String lat;
 
     public Location(String lng, String lat) {

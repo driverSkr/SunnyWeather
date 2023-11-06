@@ -4,8 +4,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+//未来几天的天气数据
 public class DailyResponse {
+    //响应状态
     private String status;
+    //响应结果
     private Result result;
 
     public DailyResponse(String status, Result result) {
@@ -34,9 +37,11 @@ public class DailyResponse {
     }
 
     public static class Daily {
+        //温度信息
         private List<Temperature> temperature;
+        //天气类型
         private List<Skycon> skycon;
-
+        //生活指数
         @SerializedName("life_index")
         private LifeIndex lifeIndex;
 
@@ -58,9 +63,11 @@ public class DailyResponse {
             return lifeIndex;
         }
     }
-
+    //温度信息
     public static class Temperature {
+        //最大温度
         private float max;
+        //最小温度
         private float min;
 
         public Temperature(float max, float min) {
@@ -77,8 +84,11 @@ public class DailyResponse {
         }
     }
 
+    //天气类型
     public static class Skycon {
+        //天气类型
         private String value;
+        //时间
         private Date date;
 
         public Skycon(String value, Date date) {
@@ -95,10 +105,15 @@ public class DailyResponse {
         }
     }
 
+    //生活指数
     public static class LifeIndex {
+        //感冒
         private List<LifeDescription> coldRisk;
+        //洗车
         private List<LifeDescription> carWashing;
+        //紫外线
         private List<LifeDescription> ultraviolet;
+        //穿衣
         private List<LifeDescription> dressing;
 
         public LifeIndex(List<LifeDescription> coldRisk, List<LifeDescription> carWashing,
@@ -125,8 +140,9 @@ public class DailyResponse {
             return dressing;
         }
     }
-
+    //生活指数的描述
     public static class LifeDescription {
+        //描述内容
         private String desc;
 
         public LifeDescription(String desc) {

@@ -3,7 +3,9 @@ package com.example.SunnyWeather.logic.model;
 import java.util.List;
 
 public class PlaceResponse {
+    //响应状态
     private String status;
+    //地址数据包
     private List<Place> places;
 
     public PlaceResponse(String status, List<Place> places) {

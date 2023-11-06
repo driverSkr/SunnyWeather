@@ -2,14 +2,21 @@ package com.example.SunnyWeather;
 
 import static com.example.SunnyWeather.logic.utils.WeatherUtils.getSky;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,11 +37,14 @@ import java.util.Locale;
 
 public class WeatherActivity extends AppCompatActivity {
 
-    private WeatherViewModel viewModel;
+    public WeatherViewModel viewModel;
     private TextView placeName,currentTemp,currentSky,currentAQI,coldRiskText, dressingText, ultravioletText, carWashingText;
     private LinearLayout forecastLayout;
     private RelativeLayout nowLayout;
     private ScrollView weatherLayout;
+    private SwipeRefreshLayout swipeRefresh;
+    public DrawerLayout drawerLayout;
+    private Button navBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,8 @@ public class WeatherActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
         // 初始化视图元素
+        drawerLayout = findViewById(R.id.drawerLayout);
+        swipeRefresh = findViewById(R.id.swipeRefresh);
         placeName = findViewById(R.id.placeName);
         currentTemp = findViewById(R.id.currentTemp);
         currentSky = findViewById(R.id.currentSky);
@@ -66,6 +78,7 @@ public class WeatherActivity extends AppCompatActivity {
         forecastLayout = findViewById(R.id.forecastLayout);
         nowLayout = findViewById(R.id.nowLayout);
         weatherLayout = findViewById(R.id.weatherLayout);
+        navBtn = findViewById(R.id.navBtn);
 
         // 检查并获取传递的位置信息
         if (viewModel.locationLng.isEmpty()){
@@ -78,22 +91,46 @@ public class WeatherActivity extends AppCompatActivity {
             viewModel.placeName = getIntent().getStringExtra("place_name");
         }
 
-        //观察天气数据的变化
-        viewModel.getWeatherLiveData().observe(this, new Observer<Result<Weather>>() {
-            @Override
-            public void onChanged(Result<Weather> result) {
-                Weather weather = result.getOrNull();
-                if (weather != null) {
-                    showWeatherInfo(weather);
-                } else {
-                    Toast.makeText(WeatherActivity.this, "无法成功获取天气信息", Toast.LENGTH_SHORT).show();
-                    result.getExceptionOrNull().printStackTrace();
-                }
+        //观察天气数据的变化,result即Repository.refreshWeather(location.getLng(),location.getLat())执行得到的
+        viewModel.getWeatherLiveData().observe(this, result -> {
+            Weather weather = result.getOrNull();
+            if (weather != null) {
+                //当获取到服务器返回的天气数据时，就调用showWeatherInfo()方法进行解析与展示
+                showWeatherInfo(weather);
+            } else {
+                Toast.makeText(WeatherActivity.this, "无法成功获取天气信息", Toast.LENGTH_SHORT).show();
+                result.getExceptionOrNull().printStackTrace();
             }
+            swipeRefresh.setRefreshing(false);
         });
+    /*下拉刷新*/
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        refreshWeather();
+        //下拉刷新的执行逻辑
+        swipeRefresh.setOnRefreshListener(this::refreshWeather);
 
         //请求天气数据
         viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat);
+
+    //加入滑动菜单的逻辑
+        navBtn.setOnClickListener(v -> {
+            //打开滑动菜单
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
+        //监听DrawerLayout 的状态
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {}
+            @Override//当滑动菜单被隐藏的时候，同时也要隐藏输入法
+            public void onDrawerClosed(@NonNull View drawerView) {
+                InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+            @Override
+            public void onDrawerStateChanged(int newState) {}
+        });
     }
 
     private void showWeatherInfo(Weather weather){
@@ -136,5 +173,10 @@ public class WeatherActivity extends AppCompatActivity {
         ultravioletText.setText(lifeIndex.getUltraviolet().get(0).getDesc());
         carWashingText.setText(lifeIndex.getCarWashing().get(0).getDesc());
         weatherLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void refreshWeather(){
+        viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat);
+        swipeRefresh.setRefreshing(true);
     }
 }

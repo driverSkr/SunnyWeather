@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "SunnyWeather"
 include ':app'
+include ':SunnyWeather-pro'
+include ':sunnyweather-kotlin'

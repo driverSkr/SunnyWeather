@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
+//全局变量设置
 public class SunnyWeatherApplication extends Application {
 
     //获取Context并非是那么容易的一件事，有时候还是挺伤脑筋的,设置全局Context

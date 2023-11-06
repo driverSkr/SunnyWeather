@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.SunnyWeather.MainActivity;
 import com.example.SunnyWeather.R;
 import com.example.SunnyWeather.WeatherActivity;
 import com.example.SunnyWeather.logic.model.Place;
@@ -44,8 +45,8 @@ public class PlaceFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(PlaceViewModel.class);
 
-        //如果当前已有存储的城市数据，那么就获取已存储的数据并解析成Place对象
-        if (viewModel.isPlaceSaved()){
+        //只有当PlaceFragment 被嵌入MainActivity中，并且之前已经存在选中的城市，此时才会直接跳转到WeatherActivity
+        if (getActivity() instanceof MainActivity && viewModel.isPlaceSaved()){
             Place place = viewModel.getSavedPlace();
             Intent intent = new Intent(getContext(), WeatherActivity.class);
             //使用它的经纬度坐标和城市名直接跳转并传递给WeatherActivity,这样用户就不需要每次都重新搜索并选择城市了
@@ -68,6 +69,7 @@ public class PlaceFragment extends Fragment {
         EditText searchPlaceEdit = requireView().findViewById(R.id.searchPlaceEdit);
         ImageView bgImageView = getView().findViewById(R.id.bgImageView);
 
+        //监听搜索栏的变化，一点变化，就将变化的值传给searchLiveData
         searchPlaceEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -88,6 +90,7 @@ public class PlaceFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
 
+        //观察着searchLiveData地址数据的变化，每次变化都会查询一次地址数据
         viewModel.getPlaceLiveData().observe(getViewLifecycleOwner(), new Observer<List<Place>>() {
             @Override
             public void onChanged(List<Place> result) {

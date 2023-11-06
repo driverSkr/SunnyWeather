@@ -7,7 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-//首先定义一个用于访问彩云天气城市搜索API的Retrofit接口
+//首先定义一个用于访问彩云天气 城市搜索API的Retrofit接口
 public interface PlaceService {
     String BASE_UEL = "v2/place?token=" + SunnyWeatherApplication.TOKEN + "&lang=zh_CN";
 

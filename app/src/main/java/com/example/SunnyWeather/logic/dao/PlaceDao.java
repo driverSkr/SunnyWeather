@@ -1,8 +1,8 @@
 package com.example.SunnyWeather.logic.dao;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.SunnyWeather.SunnyWeatherApplication;
 import com.example.SunnyWeather.logic.model.Place;
@@ -14,7 +14,10 @@ public class PlaceDao {
     public static void savePlace(Place place){
         //edit()方法来获取编辑器
         //通过GSON将Place对象转成一个JSON字符串
-        sharedPreferences().edit().putString("place",new Gson().toJson(place));
+        SharedPreferences.Editor editor = sharedPreferences().edit();
+        editor.putString("place",new Gson().toJson(place));
+        editor.apply();
+        Log.d("boge","调用了savePlace方法");
     }
 
     public static Place getSavedPlace(){
@@ -30,6 +33,7 @@ public class PlaceDao {
     }
 
     private static SharedPreferences sharedPreferences(){
+        Log.d("boge","调用了sharedPreferences方法");
         return SunnyWeatherApplication.context.
                 getSharedPreferences("sunny_weather", Context.MODE_PRIVATE);
     }
